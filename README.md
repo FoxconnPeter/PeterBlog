@@ -1,37 +1,159 @@
-## Welcome to GitHub Pages
+````
+public class Array<E> {
 
-You can use the [editor on GitHub](https://github.com/FoxconnPeter/PeterBlog/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+    private E[] data;
+    private int size;
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+    // 构造函数，传入数组的容量capacity构造Array
+    public Array(int capacity){
+        data = (E[])new Object[capacity];
+        size = 0;
+    }
 
-### Markdown
+    //无参数的构造函数，默认数组的容量capacity=10
+    public Array(){
+        this(10);
+    }
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+    //获取数组中的元素个数
+    public int getSize(){
+        return size;
+    }
 
-```markdown
-Syntax highlighted code block
+    //获取数组的容量
+    public int getCapacity(){
+        return data.length;
+    }
 
-# Header 1
-## Header 2
-### Header 3
+    //返回数组是否为空
+    public  boolean isEmpty(){
+        return  size == 0;
+    }
 
-- Bulleted
-- List
+    //向所有的元素后添加一个新元素
+    public void addLast(E e ){
+        add(size,e);
+    }
 
-1. Numbered
-2. List
+    //在数组第一个位置插入元素
+    public void addFirst(E e){
+        add(0,e);
+    }
 
-**Bold** and _Italic_ and `Code` text
+    //在第index个位置插入一个新元素e
+    public void  add(int index,E e){
+        if (index<0 || index >size ){
+            throw new IllegalArgumentException("Add failed.Require index>=0 and <=size.lenght");
+        }
+        //当容量超出之后，开始扩容
+        if (size == data.length){
+            //扩容
+            resize(2*data.length);
+        }
+        for (int i=size-1;i>=index;i--){
+            data[i+1]=data[i];
+        }
+        data[index]=e;
+        size ++;
+    }
 
-[Link](url) and ![Image](src)
-```
+    @Override
+    public String toString(){
+        StringBuilder res = new StringBuilder();
+        res.append(String.format("Array:size=%d,capacity=%d\n",size,data.length));
+        res.append('[');
+        for (int i=0;i<size;i++){
+            res.append(data[i]);
+            //判断是不是最后一个元素
+            if (i!=size-1){
+                res.append(", ");
+            }
+        }
+        res.append(']');
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+        return res.toString();
+    }
 
-### Jekyll Themes
+    //获取index索引位置的元素
+    E get (int index){
+        if (index<0|| index>=size){
+            throw new IllegalArgumentException("Get failed.Index is illegall.");
+        }
+        return data[index];
+    }
+    //修过index索引位置的元素为e
+    void set(int index,E e ){
+        if (index<0|| index>=size){
+            throw new IllegalArgumentException("Get failed.Index is illegall.");
+        }
+         data[index]=e;
+    }
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/FoxconnPeter/PeterBlog/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+    //查找数组是否有元素e
+    public boolean contains(E e){
+        for (int i =0;i<size;i++){
+            if (data[i].equals(e)){
+                return true;
+            }
+        }
+        return false;
+    }
 
-### Support or Contact
+    //查找数组中元素e所在的索引，如果不存在元素e,则返回-1
+    public int find(E e){
+        for (int i =0;i<size;i++){
+            if (data[i] .equals(e)){
+                return i;
+            }
+        }
+        return -1;
+    }
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+    //从数组中删除index位置的元素，返回删除的元素
+    public E  remove(int index){
+        if (index<0|| index>=size){
+            throw new IllegalArgumentException("Get failed.Index is illegall.");
+        }
+        E  ret = data[index];
+        for (int i=index+1;i<size;i++){
+            data[i-1] = data[i];
+        }
+        size --;
+        data[size]=null;
+        if (size==data.length/2){
+            resize(data.length/2);
+        }
+        return ret;
+    }
+
+    //从数组中删除第一个元素，返回删除的元素
+    public E removeFirst(){
+       return remove(0);
+    }
+    //从数组中删除最后一个元素，返回删除的元素
+    public E  removeLast(){
+        return remove(size-1);
+    }
+
+    //从数组中删除元素e
+    public void removeElement(E e){
+        int index=find(e);
+        if (index !=-1){
+            remove(index);
+        }
+    }
+
+    //动态扩容
+    private void resize(int newCapacity){
+        E[] newData=(E[])new Object[newCapacity];
+        for (int i =0;i<size;i++){
+            newData[i]=data[i];
+        }
+        data=newData;
+    }
+
+
+
+}
+
+````
